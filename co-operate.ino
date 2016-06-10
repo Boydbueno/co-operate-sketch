@@ -1,22 +1,27 @@
 #include <SerialCommand.h>
 #define onLED 7
 #define engineLED 8
+#define shieldLED 3
 
 #define testSwitch 6
 #define keySwitch 5
 #define startButton 4
 #define slider A0
+#define rotary A1
 
 #define testSwitchIndex 0
 #define keySwitchIndex 1
 #define startButtonIndex 2
 
 #define sliderIndex 0
+#define rotaryIndex 1
 
 #define START_LED_ON "STRT:1"
 #define START_LED_OFF "STRT:0"
 #define ENGINE_LED_ON "ENG:1"
 #define ENGINE_LED_OFF "ENG:0"
+#define SHIELD_LED_ON "SHLD:1"
+#define SHIELD_LED_OFF "SHLD:0"
 
 SerialCommand sCmd;
 
@@ -24,8 +29,8 @@ int switchState[3];
 int lastSwitchState[3];
 unsigned long lastSwitchDebounceTime[3];
 
-int potValue[1];
-int lastPotValue[1];
+int potValue[2];
+int lastPotValue[2];
 
 const long debounceDelay = 10;
 const int maxQueuedStateChanges = 20;
@@ -36,6 +41,7 @@ String queuedStateChanges[maxQueuedStateChanges];
 void setup() {
   pinMode(onLED, OUTPUT);
   pinMode(engineLED, OUTPUT);
+  pinMode(shieldLED, OUTPUT);
   pinMode(testSwitch, INPUT_PULLUP);
   pinMode(keySwitch, INPUT_PULLUP);
   pinMode(startButton, INPUT_PULLUP);
@@ -78,6 +84,10 @@ void actionHandler() {
       digitalWrite(engineLED, HIGH);
     } else if (String(arg) == ENGINE_LED_OFF) {
       digitalWrite(engineLED, LOW);
+    } else if (String(arg) == SHIELD_LED_ON) {
+      digitalWrite(shieldLED, HIGH);
+    } else if (String(arg) == SHIELD_LED_OFF) {
+      digitalWrite(shieldLED, LOW);
     }
     arg = sCmd.next();
   }
@@ -85,6 +95,7 @@ void actionHandler() {
 
 void requestHandler() {
   handlePot(slider, sliderIndex, "SLIDER");
+  handlePot(rotary, rotaryIndex, "ROTARY");
   
   if (queuedStateChangesCount == 0) return;
 
