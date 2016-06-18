@@ -49,8 +49,7 @@ void setup() {
   
   Serial.begin(9600);
  
-  sCmd.addCommand("START", startHandler);
-  sCmd.addCommand("STOP", stopHandler);
+  sCmd.addCommand("STRT", startHandler);
   sCmd.addCommand("A", actionHandler);
   sCmd.addCommand("R", requestHandler);
   sCmd.setDefaultHandler(unrecognized);
@@ -66,10 +65,6 @@ void loop() {
 
 void startHandler() {
   digitalWrite(onLED, HIGH);
-}
-
-void stopHandler() {
-  digitalWrite(onLED, LOW);
 }
 
 void actionHandler() {
@@ -88,6 +83,8 @@ void actionHandler() {
       digitalWrite(shieldLED, HIGH);
     } else if (String(arg) == SHIELD_LED_OFF) {
       digitalWrite(shieldLED, LOW);
+    } else if (String(arg) == "STOP") {
+      digitalWrite(onLED, LOW);
     }
     arg = sCmd.next();
   }
@@ -135,7 +132,7 @@ void handleSwitch(int switchPin, int switchIndex, String switchName) {
 void handlePot(int potPin, int potIndex, String potName) {
   potValue[potIndex] = analogRead(potPin);
 
-  if (potValue[potIndex] <= lastPotValue[potIndex] + 5 && potValue[potIndex] >= lastPotValue[potIndex] - 5) return;
+  if (potValue[potIndex] <= lastPotValue[potIndex] + 1 && potValue[potIndex] >= lastPotValue[potIndex] - 1) return;
 
   storeNewState(potName + ":" + (potValue[potIndex]/1023.0));
 
