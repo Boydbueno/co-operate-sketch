@@ -6,12 +6,15 @@
 #define testSwitch 6
 #define keySwitch 5
 #define startButton 4
+#define boostSwitch 2
+
 #define slider A0
 #define rotary A1
 
 #define testSwitchIndex 0
 #define keySwitchIndex 1
 #define startButtonIndex 2
+#define boostSwitchIndex 3
 
 #define sliderIndex 0
 #define rotaryIndex 1
@@ -25,9 +28,9 @@
 
 SerialCommand sCmd;
 
-int switchState[3];
-int lastSwitchState[3];
-unsigned long lastSwitchDebounceTime[3];
+int switchState[4];
+int lastSwitchState[4];
+unsigned long lastSwitchDebounceTime[4];
 
 int potValue[2];
 int lastPotValue[2];
@@ -45,6 +48,7 @@ void setup() {
   pinMode(testSwitch, INPUT_PULLUP);
   pinMode(keySwitch, INPUT_PULLUP);
   pinMode(startButton, INPUT_PULLUP);
+  pinMode(boostSwitch, INPUT_PULLUP);
   digitalWrite(onLED, LOW);
   
   Serial.begin(9600);
@@ -61,6 +65,7 @@ void loop() {
   handleSwitch(testSwitch, testSwitchIndex, "TEST_SWITCH");
   handleSwitch(keySwitch, keySwitchIndex, "KEY_SWITCH");
   handleSwitch(startButton, startButtonIndex, "START_BTN");
+  handleSwitch(boostSwitch, boostSwitchIndex, "BOOST_SWITCH");
 }
 
 void startHandler() {
